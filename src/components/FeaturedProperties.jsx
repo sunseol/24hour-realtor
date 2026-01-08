@@ -9,10 +9,11 @@ const FeaturedProperties = () => {
       type: "apartment",
       status: "매매",
       price: "35억 5천",
-      title: "강남구 도곡동 타워팰리스",
-      location: "서울시 강남구 도곡동",
+      title: "중구 을지로 프라임 타워",
+      location: "서울시 중구 을지로",
       specs: "218㎡ (66평) · 방 4 · 욕실 2",
       tags: ["남향", "올수리", "로얄층"],
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
       color: "from-blue-900 to-slate-800"
     },
     {
@@ -20,10 +21,11 @@ const FeaturedProperties = () => {
       type: "office",
       status: "임대",
       price: "보 5억 / 월 450",
-      title: "테헤란로 프라임 오피스",
-      location: "서울시 강남구 역삼동",
+      title: "DDP 프라임 오피스",
+      location: "서울시 중구 을지로 281",
       specs: "330㎡ (100평) · 15층",
       tags: ["역세권", "주차가능", "신축"],
+      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
       color: "from-slate-800 to-gray-800"
     },
     {
@@ -31,10 +33,11 @@ const FeaturedProperties = () => {
       type: "apartment",
       status: "전세",
       price: "12억",
-      title: "서초구 반포 자이",
-      location: "서울시 서초구 반포동",
+      title: "동대문역 자이",
+      location: "서울시 중구 장충동",
       specs: "84㎡ (34평) · 방 3 · 욕실 2",
       tags: ["풀옵션", "즉시입주", "한강뷰"],
+      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
       color: "from-indigo-900 to-blue-900"
     }
   ];
@@ -77,27 +80,32 @@ const FeaturedProperties = () => {
           {properties.map((property) => (
             <div key={property.id} className="group bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
               <div className={`h-64 bg-gradient-to-br ${property.color} relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                <img
+                  src={property.image}
+                  alt={property.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                 <div className="absolute top-4 left-4">
-                  <span className="bg-white/90 backdrop-blur-sm text-primary-900 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">
+                  <span className="bg-white/95 backdrop-blur-sm text-primary-900 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide shadow-lg">
                     {property.status}
                   </span>
                 </div>
-                <div className="absolute bottom-4 left-4 text-white">
+                <div className="absolute bottom-4 left-4 text-white drop-shadow-lg">
                   <p className="text-2xl font-bold">{property.price}</p>
                 </div>
-                
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-sm">
                     <button className="bg-white text-primary-900 px-6 py-2 rounded-full font-bold shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
                         상세보기
                     </button>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <h4 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-primary-700 transition-colors">{property.title}</h4>
                 <p className="text-gray-500 text-sm mb-4">{property.location}</p>
-                
+
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-6 pb-6 border-b border-gray-100">
                   <div className="flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
@@ -106,7 +114,7 @@ const FeaturedProperties = () => {
                     {property.specs}
                   </div>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2">
                   {property.tags.map((tag, i) => (
                     <span key={i} className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">

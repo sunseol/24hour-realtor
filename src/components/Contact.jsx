@@ -9,9 +9,17 @@ const Contact = () => {
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
           <div className="grid lg:grid-cols-2">
             <div className="p-12 lg:p-16 bg-primary-900 text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gold-500 rounded-full blur-[100px] opacity-20 -mr-32 -mt-32"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-500 rounded-full blur-[100px] opacity-20 -ml-32 -mb-32"></div>
-              
+              <div className="absolute inset-0">
+                <img
+                  src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80"
+                  alt="사무실"
+                  className="w-full h-full object-cover opacity-15"
+                />
+              </div>
+              <div className="absolute inset-0 bg-primary-900/80"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gold-500 rounded-full blur-[100px] opacity-10 -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-500 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32"></div>
+
               <div className="relative z-10">
                 <h3 className="text-gold-500 font-bold tracking-wider uppercase mb-3">Contact Us</h3>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">부동산 전문가와 상담하세요</h2>
@@ -54,7 +62,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-gray-400 text-sm mb-1">오시는 길</p>
-                      <p className="text-lg font-bold">서울특별시 강남구 테헤란로 123</p>
+                      <p className="text-lg font-bold">서울특별시 중구 을지로 281<br/>DDP (동대문디자인플라자)</p>
                     </div>
                   </div>
                 </div>

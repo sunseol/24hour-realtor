@@ -2,16 +2,21 @@ import React from 'react';
 
 const Hero = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-primary-900">
+    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 opacity-90"></div>
+        <img
+          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2000&q=80"
+          alt="프리미엄 부동산"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary-900/95 via-primary-800/90 to-primary-950/95"></div>
         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gold-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-[-10%] left-[-10%] w-[700px] h-[700px] bg-primary-500/10 rounded-full blur-3xl"></div>
-        
-        <div className="absolute inset-0 opacity-[0.03]" 
-             style={{ 
-               backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)', 
-               backgroundSize: '40px 40px' 
+
+        <div className="absolute inset-0 opacity-[0.03]"
+             style={{
+               backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
+               backgroundSize: '40px 40px'
              }}>
         </div>
       </div>
