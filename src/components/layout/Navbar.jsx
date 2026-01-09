@@ -41,7 +41,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className={`text-xl font-bold leading-none ${showTransparent ? "text-white" : "text-slate-900"}`}>
-                24시<span className="text-amber-500">부동산</span>
+                24시<span className="text-amber-500"> 코리아 부동산</span>
               </span>
               <span className={`text-xs font-medium tracking-wider ${showTransparent ? "text-white/70" : "text-slate-500"}`}>
                 24-HOUR REALTOR
