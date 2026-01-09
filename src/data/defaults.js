@@ -127,7 +127,11 @@ export const defaultCompanyInfo = {
   companyNameEn: "24-HOUR REALTOR",
   phone: "1588-0000",
   email: "contact@24realtor.com",
-  address: "서울특별시 중구 을지로 281 DDP (동대문디자인플라자)",
+  address: "서울 중구 다산로44길 29",
+  coordinates: {
+    lat: 37.5595,
+    lng: 127.0088
+  },
   businessHours: {
     weekday: "09:00 - 20:00",
     weekend: "10:00 - 18:00",

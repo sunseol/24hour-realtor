@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { Phone, Mail, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
-import { SEO, Button, Input, Card } from '../components/common';
+import { SEO, Button, Input, Card, KakaoMap } from '../components/common';
 import { useCompanyInfo } from '../hooks';
 
 const contactSchema = z.object({
@@ -238,14 +238,13 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900">오시는 길</h2>
+            <p className="text-slate-600 mt-2">{companyInfo.address}</p>
           </div>
-          <div className="aspect-video bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400">
-            <div className="text-center">
-              <MapPin className="w-16 h-16 mx-auto mb-4 text-slate-300" />
-              <p className="text-lg">지도 서비스 준비중입니다</p>
-              <p className="mt-2">{companyInfo.address}</p>
-            </div>
-          </div>
+          <KakaoMap 
+            address={companyInfo.address}
+            markerTitle={companyInfo.companyName}
+            className="aspect-video"
+          />
         </div>
       </section>
     </>
