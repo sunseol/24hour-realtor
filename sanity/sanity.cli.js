@@ -4,5 +4,6 @@ export default defineCliConfig({
   api: {
     projectId: 'l0tlxkcn',
     dataset: 'production'
-  }
+  },
+  studioHost: 'realtor24'
 })
