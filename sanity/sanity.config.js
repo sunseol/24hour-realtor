@@ -5,7 +5,7 @@ import {schemaTypes} from './schemas'
 
 export default defineConfig({
   name: 'default',
-  title: '24시간코리이 부동산',
+  title: '24시 코리아 부동산',
 
   projectId: 'l0tlxkcn',
   dataset: 'production',

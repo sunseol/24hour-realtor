@@ -7,7 +7,7 @@ export default function SEO({
   ogImage,
   ogType = 'website' 
 }) {
-  const siteName = '24시부동산';
+  const siteName = '24시 코리아 부동산';
   const fullTitle = title ? `${title} | ${siteName}` : siteName;
   const defaultDescription = '24시간 언제나 고객님의 곁에서 최고의 부동산 서비스를 제공합니다.';
 

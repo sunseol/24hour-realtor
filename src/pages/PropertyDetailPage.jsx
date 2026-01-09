@@ -153,7 +153,7 @@ export default function PropertyDetailPage() {
 
                 <div className="mt-6 pt-6 border-t border-slate-100">
                   <p className="text-sm text-slate-500 mb-2">담당자</p>
-                  <p className="font-semibold text-slate-900">24시부동산 전문 상담팀</p>
+                  <p className="font-semibold text-slate-900">24시 코리아 부동산 전문 상담팀</p>
                   <p className="text-sm text-slate-500 mt-1">{companyInfo.phone}</p>
                 </div>
               </div>

@@ -53,7 +53,7 @@ export default function PropertyListPage() {
     <>
       <SEO 
         title="매물 목록"
-        description="24시부동산의 프리미엄 매물을 확인하세요. 아파트, 빌라, 오피스텔 등 다양한 부동산 정보를 제공합니다."
+        description="24시 코리아 부동산의 프리미엄 매물을 확인하세요. 아파트, 빌라, 오피스텔 등 다양한 부동산 정보를 제공합니다."
         keywords="부동산 매물, 아파트 매매, 전세, 월세, 강남 부동산"
       />
       

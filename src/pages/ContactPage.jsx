@@ -40,7 +40,7 @@ export default function ContactPage() {
     <>
       <SEO 
         title="상담 예약"
-        description="24시부동산에 상담을 예약하세요. 전문 컨설턴트가 맞춤 상담을 제공합니다."
+        description="24시 코리아 부동산에 상담을 예약하세요. 전문 컨설턴트가 맞춤 상담을 제공합니다."
         keywords="부동산 상담, 상담 예약, 무료 상담, 부동산 컨설팅"
       />
 

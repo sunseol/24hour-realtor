@@ -7,7 +7,7 @@ export default {
       name: 'companyName',
       title: '회사명 (한글)',
       type: 'string',
-      initialValue: '24시부동산',
+      initialValue: '24시 코리아 부동산',
     },
     {
       name: 'companyNameEn',

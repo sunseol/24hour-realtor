@@ -12,7 +12,7 @@ const stats = [
 ];
 
 const timeline = [
-  { year: '2010', title: '회사 설립', description: '강남구에 24시부동산 창립' },
+  { year: '2010', title: '회사 설립', description: '강남구에 24시 코리아 부동산 창립' },
   { year: '2014', title: '서초 지점 오픈', description: '서초구 지역 확장' },
   { year: '2018', title: '거래 1,000건 돌파', description: '누적 거래 1,000건 달성' },
   { year: '2022', title: '온라인 플랫폼 런칭', description: '디지털 부동산 서비스 시작' },
@@ -60,8 +60,8 @@ export default function AboutPage() {
     <>
       <SEO 
         title="회사 소개"
-        description="24시부동산은 15년 이상의 경력으로 고객님께 최고의 부동산 서비스를 제공합니다."
-        keywords="24시부동산, 부동산 중개, 공인중개사, 강남 부동산"
+        description="24시 코리아 부동산은 15년 이상의 경력으로 고객님께 최고의 부동산 서비스를 제공합니다."
+        keywords="24시 코리아 부동산, 부동산 중개, 공인중개사, 강남 부동산"
       />
 
       <section className="pt-24 pb-16 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950">
@@ -153,7 +153,7 @@ export default function AboutPage() {
               <span className="text-amber-600 font-semibold text-sm uppercase tracking-wider">Certifications</span>
               <h2 className="text-3xl font-bold text-slate-900 mt-3 mb-6">자격 및 인증</h2>
               <p className="text-slate-600 mb-8">
-                24시부동산의 모든 컨설턴트는 공인된 자격을 보유하고 있으며, 
+                24시 코리아 부동산의 모든 컨설턴트는 공인된 자격을 보유하고 있으며, 
                 지속적인 교육을 통해 전문성을 유지합니다.
               </p>
               <div className="space-y-3">

@@ -123,7 +123,7 @@ export const defaultListings = [
 ];
 
 export const defaultCompanyInfo = {
-  companyName: "24시부동산",
+  companyName: "24시 코리아 부동산",
   companyNameEn: "24-HOUR REALTOR",
   phone: "1588-0000",
   email: "contact@24realtor.com",
