@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { client } from '../lib/sanity';
-import { servicesQuery, listingsQuery, listingByIdQuery, companyInfoQuery } from '../lib/queries';
+import { servicesQuery, listingsQuery, listingByIdQuery, companyInfoQuery, legalPageQuery } from '../lib/queries';
 import { defaultServices, defaultListings, defaultCompanyInfo } from '../data/defaults';
 
 export function useSanityData(query, defaultData = [], params = {}) {
@@ -54,4 +54,8 @@ export function useListing(id) {
 
 export function useCompanyInfo() {
   return useSanityData(companyInfoQuery, defaultCompanyInfo);
+}
+
+export function useLegalPage(pageType) {
+  return useSanityData(legalPageQuery, null, { pageType });
 }

@@ -56,3 +56,11 @@ export const companyInfoQuery = `
     businessHours
   }
 `;
+
+export const legalPageQuery = `
+  *[_type == "legalPage" && pageType == $pageType][0] {
+    title,
+    lastUpdated,
+    content
+  }
+`;

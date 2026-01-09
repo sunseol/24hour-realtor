@@ -7,7 +7,9 @@ import {
   PropertyListPage, 
   PropertyDetailPage, 
   AboutPage, 
-  ContactPage 
+  ContactPage,
+  PrivacyPage,
+  TermsPage
 } from './pages';
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
           <Route path="properties/:id" element={<PropertyDetailPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="privacy" element={<PrivacyPage />} />
+          <Route path="terms" element={<TermsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
