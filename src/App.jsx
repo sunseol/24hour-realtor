@@ -12,7 +12,7 @@ import {
   X,
   Clock
 } from 'lucide-react';
-import { client, getServices, getListings, getCompanyInfo, urlFor } from './lib/sanity';
+import { client, getServices, getListings, getCompanyInfo } from './lib/sanity';
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -39,8 +39,8 @@ function App() {
           getCompanyInfo()
         ]);
 
-        if (servicesData.length > 0) setServices(servicesData);
-        if (listingsData.length > 0) setListings(listingsData);
+        if (servicesData && servicesData.length > 0) setServices(servicesData);
+        if (listingsData && listingsData.length > 0) setListings(listingsData);
         if (companyData) setCompanyInfo(companyData);
       } catch (error) {
         console.log('Sanity not connected, using static data');
@@ -54,28 +54,32 @@ function App() {
 
   const defaultServices = [
     {
-      icon: <Home className="w-8 h-8" />,
+      _id: 1,
       title: "주거용 부동산",
       description: "아파트, 빌라, 원룸 등 다양한 주거 형태의 매물을 전문적으로 관리합니다.",
-      colorClass: "from-blue-600 to-blue-800"
+      colorClass: "from-blue-600 to-blue-800",
+      icon: null
     },
     {
-      icon: <Building2 className="w-8 h-8" />,
+      _id: 2,
       title: "상업용 부동산",
       description: "오피스, 상가, 투자용 부동산의 입지 분석과 컨설팅을 제공합니다.",
-      colorClass: "from-amber-600 to-amber-800"
+      colorClass: "from-amber-600 to-amber-800",
+      icon: null
     },
     {
-      icon: <TrendingUp className="w-8 h-8" />,
+      _id: 3,
       title: "부동산 투자 자문",
       description: "시장 분석 기반의 안정적이고 수익성 높은 투자 포트폴리오를 제안합니다.",
-      colorClass: "from-emerald-600 to-emerald-800"
+      colorClass: "from-emerald-600 to-emerald-800",
+      icon: null
     },
     {
-      icon: <Shield className="w-8 h-8" />,
+      _id: 4,
       title: "자산 관리",
       description: "고객님의 자산을 안전하게 관리하고 가치를 극대화하는 솔루션을 제공합니다.",
-      colorClass: "from-purple-600 to-purple-800"
+      colorClass: "from-purple-600 to-purple-800",
+      icon: null
     }
   ];
 
@@ -88,7 +92,8 @@ function App() {
       typeColor: "bg-amber-500",
       specs: "84㎡ · 3 bedroom · 2 bath",
       tags: ["남향", "역세권", "단기"],
-      gradientClass: "from-slate-700 to-slate-900"
+      gradientClass: "from-slate-700 to-slate-900",
+      hasImage: false
     },
     {
       _id: 2,
@@ -98,7 +103,8 @@ function App() {
       typeColor: "bg-blue-500",
       specs: "120㎡ · 4인 사무실",
       tags: ["신축", "주차가능", "역세권"],
-      gradientClass: "from-slate-600 to-slate-800"
+      gradientClass: "from-slate-600 to-slate-800",
+      hasImage: false
     },
     {
       _id: 3,
@@ -108,7 +114,8 @@ function App() {
       typeColor: "bg-emerald-500",
       specs: "65㎡ · 2 bedroom · 1 bath",
       tags: ["풀옵션", "즉시입주"],
-      gradientClass: "from-slate-800 to-slate-950"
+      gradientClass: "from-slate-800 to-slate-950",
+      hasImage: false
     }
   ];
 
@@ -124,6 +131,55 @@ function App() {
 
   const phoneNumber = companyInfo?.phone || "1588-0000";
   const address = companyInfo?.address || "서울특별시 중구 을지로 281 DDP (동대문디자인플라자)";
+
+  const ServiceIcon = ({ service }) => {
+    const icons = [
+      <Home className="w-8 h-8" />,
+      <Building2 className="w-8 h-8" />,
+      <TrendingUp className="w-8 h-8" />,
+      <Shield className="w-8 h-8" />
+    ];
+
+    if (service.icon && typeof service.icon === 'string' && service.icon.startsWith('http')) {
+      return (
+        <img
+          src={service.icon}
+          alt={service.title}
+          className="w-8 h-8"
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentElement.innerHTML = '';
+          }}
+        />
+      );
+    }
+
+    const iconIndex = service._id ? (service._id - 1) % 4 :
+                      displayServices.findIndex(s => s._id === service._id) % 4;
+
+    return icons[iconIndex] || icons[0];
+  };
+
+  const PropertyImage = ({ listing }) => {
+    const imageUrl = listing.image;
+
+    if (!imageUrl || typeof imageUrl !== 'string' || !imageUrl.startsWith('http')) {
+      return null;
+    }
+
+    return (
+      <img
+        src={imageUrl}
+        alt={listing.title}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          e.target.style.display = 'none';
+          e.target.parentElement.classList.remove('bg-gradient-to-br');
+          e.target.parentElement.classList.add(listing.gradientClass || 'from-slate-700 to-slate-900');
+        }}
+      />
+    );
+  };
 
   return (
     <div className="min-h-screen font-sans bg-white">
@@ -279,11 +335,7 @@ function App() {
                 className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-slate-100"
               >
                 <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.colorClass || 'from-blue-600 to-blue-800'} flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {service.icon ? (
-                    <img src={service.icon} alt={service.title} className="w-8 h-8" />
-                  ) : (
-                    service.iconReact
-                  )}
+                  <ServiceIcon service={service} />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-3">{service.title}</h3>
                 <p className="text-slate-600 leading-relaxed text-sm">{service.description}</p>
@@ -317,20 +369,14 @@ function App() {
                 key={listing._id}
                 className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100"
               >
-                <div className={`h-56 bg-gradient-to-br ${listing.gradientClass} relative overflow-hidden`}>
-                  {listing.image && (
-                    <img
-                      src={listing.image}
-                      alt={listing.title}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
+                <div className={`h-56 bg-gradient-to-br ${listing.gradientClass || 'from-slate-700 to-slate-900'} relative overflow-hidden`}>
+                  <PropertyImage listing={listing} />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
-                    <div className="absolute top-4 left-4">
-                      <span className={`${listing.typeColor || "bg-amber-500"} text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide`}>
-                        {listing.type}
-                      </span>
-                    </div>
+                  <div className="absolute top-4 left-4">
+                    <span className={`${listing.typeColor || 'bg-amber-500'} text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide`}>
+                      {listing.type}
+                    </span>
+                  </div>
                   <div className="absolute bottom-4 left-4 text-white">
                     <p className="text-2xl font-bold">{listing.price}</p>
                   </div>
@@ -346,11 +392,13 @@ function App() {
                     {listing.title}
                   </h3>
                   <div className="flex items-center gap-2 text-slate-500 text-sm mb-4">
-                    <Building2 className="w-4 h-4" />
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
                     {listing.specs}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {listing.tags?.map((tag, idx) => (
+                    {(listing.tags || []).map((tag, idx) => (
                       <span key={idx} className="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
                         #{tag}
                       </span>
@@ -424,7 +472,7 @@ function App() {
               <ul className="space-y-3 text-slate-400 text-sm">
                 <li className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-amber-500 mt-0.5" />
-                  <span>{address}</span>
+                  <span className="whitespace-pre-line">{address}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-amber-500" />
