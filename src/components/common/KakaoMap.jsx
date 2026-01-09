@@ -20,7 +20,7 @@ export default function KakaoMap({
       return;
     }
 
-    const initMap = () => {
+    window.kakao.maps.load(() => {
       try {
         const container = mapRef.current;
         if (!container) return;
@@ -79,14 +79,16 @@ export default function KakaoMap({
               setIsLoading(false);
             }
           });
+        } else {
+          setMapError(true);
+          setIsLoading(false);
         }
       } catch (error) {
+        console.error('KakaoMap error:', error);
         setMapError(true);
         setIsLoading(false);
       }
-    };
-
-    window.kakao.maps.load(initMap);
+    });
   }, [address, lat, lng, level, markerTitle]);
 
   if (mapError) {
