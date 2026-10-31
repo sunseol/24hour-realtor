@@ -22,14 +22,9 @@ const T = {
     heroCta: "원하는 조건 등록 →",
     mT: "매물 지도",
     mH: "핀을 눌러 상세 확인",
+    emptyI: "공개 매물 준비 중 — 조건 등록 시 가장 먼저 안내",
     gT: "최근 거래",
     gH: "2025 — 2026",
-    gallery: [
-      { cap: "한남", price: "매매 62억", img: "/img/luxury-pool.jpg" },
-      { cap: "청담", price: "전세 25억", img: "/img/glass-facade.jpg" },
-      { cap: "연희", price: "매매 23억", img: "/img/house-dusk.jpg" },
-      { cap: "성수", price: "전세 9억", img: "/img/int-loft.jpg" },
-    ],
     idxT: "인덱스 — 2026.10",
     th1: "No",
     th2: "위치",
@@ -63,14 +58,9 @@ const T = {
     heroCta: "Register your criteria →",
     mT: "Listings Map",
     mH: "Tap a pin for details",
+    emptyI: "No public listings yet — register criteria to be first to know",
     gT: "Recent Closings",
     gH: "2025 — 2026",
-    gallery: [
-      { cap: "Hannam", price: "Sale ₩6.2B", img: "/img/luxury-pool.jpg" },
-      { cap: "Cheongdam", price: "Jeonse ₩2.5B", img: "/img/glass-facade.jpg" },
-      { cap: "Yeonhui", price: "Sale ₩2.3B", img: "/img/house-dusk.jpg" },
-      { cap: "Seongsu", price: "Jeonse ₩900M", img: "/img/int-loft.jpg" },
-    ],
     idxT: "Index — Oct 2026",
     th1: "No",
     th2: "District",
@@ -244,31 +234,13 @@ export default function MainPage({
         </div>
       </section>
 
-      {/* GALLERY */}
-      <section className="wrap gallery" id="work">
-        <div className="slabel rv">
-          <h2>{t.gT}</h2>
-          <span className="mono">{t.gH}</span>
-        </div>
-        {[t.gallery.slice(0, 2), t.gallery.slice(2, 4)].map((pair, ri) => (
-          <div key={ri} className={"g-row" + (ri === 1 ? " rev" : "")}>
-            {pair.map((g, gi) => (
-              <div key={gi} className="g-item">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={g.img} alt="" />
-                <span className="g-cap">{g.cap} <i>{g.price}</i></span>
-              </div>
-            ))}
-          </div>
-        ))}
-      </section>
-
       {/* INDEX TABLE */}
       <section className="wrap idx" id="idx">
         <div className="idx-head rv">
           <h2>{t.idxT}</h2>
           <span className="mono">UPD 10.29</span>
         </div>
+        {listings.length > 0 ? (
         <table>
           <thead>
             <tr>
@@ -300,6 +272,9 @@ export default function MainPage({
             ))}
           </tbody>
         </table>
+        ) : (
+          <p className="mono idx-empty rv">{t.emptyI}</p>
+        )}
       </section>
 
       {/* 4 CHECKS */}

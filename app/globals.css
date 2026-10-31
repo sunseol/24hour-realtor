@@ -1179,3 +1179,9 @@ tbody tr.in {
     stroke-dashoffset: 0;
   }
 }
+
+/* 빈 인덱스 상태 */
+.idx-empty {
+  padding: 46px 0 50px;
+  border-bottom: 1px solid var(--hair);
+}

@@ -10,7 +10,7 @@ type Lang = "ko" | "en";
 
 const T = {
   ko: {
-    legend: "SEOUL — 강남 · 서초 · 성수 · 연희",
+    legend: "SEOUL — DDP · 동대문",
     s1: "전용면적",
     s2: "층 / 형태",
     s3: "방위",
@@ -19,7 +19,7 @@ const T = {
     s6: "이 매물 상담 문의",
   },
   en: {
-    legend: "SEOUL — Gangnam · Seocho · Seongsu · Yeonhui",
+    legend: "SEOUL — Dongdaemun Design Plaza",
     s1: "Net Area",
     s2: "Floor / Type",
     s3: "Facing",
@@ -58,7 +58,7 @@ export default function ListingMap({
         '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
       maxZoom: 19,
     }).addTo(map);
-    map.setView([37.53, 127.0], 12);
+    map.setView([37.5663, 127.0376], 15); // 기준점: DDP
     map.on("click", () => onOpen(null));
     mapRef.current = map;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,7 +93,11 @@ export default function ListingMap({
       });
       markersRef.current.push(m);
     });
-    if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.25), { maxZoom: 14 });
+    if (pts.length) {
+      map.fitBounds(L.latLngBounds(pts).pad(0.25), { maxZoom: 14 });
+    } else {
+      map.setView([37.5663, 127.0376], 15); // 매물 없으면 DDP 기준
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listings, lang]);
 
