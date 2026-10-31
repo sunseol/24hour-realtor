@@ -64,6 +64,8 @@ export default config({
         }),
         x: fields.number({ label: "지도 X 좌표 (0~100)", defaultValue: 50 }),
         y: fields.number({ label: "지도 Y 좌표 (0~100)", defaultValue: 50 }),
+        lat: fields.number({ label: "위도 (예: 37.5393)", defaultValue: 37.55 }),
+        lng: fields.number({ label: "경도 (예: 127.0055)", defaultValue: 127.0 }),
         image: fields.image({
           label: "대표 사진",
           directory: "public/images",

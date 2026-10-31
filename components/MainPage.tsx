@@ -1,8 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { STATUS_LABEL } from "@/lib/listings";
 import type { CMSListing, SiteContent } from "@/lib/content";
+
+const ListingMap = dynamic(() => import("@/components/ListingMap"), { ssr: false });
 
 type Lang = "ko" | "en";
 
@@ -19,13 +22,6 @@ const T = {
     heroCta: "원하는 조건 등록 →",
     mT: "매물 지도",
     mH: "핀을 눌러 상세 확인",
-    legend: "SEOUL — 강남 · 서초 · 성수 · 연희",
-    s1: "전용면적",
-    s2: "층 / 형태",
-    s3: "방위",
-    s4: "입주",
-    s5: "4중 문서 검증 완료",
-    s6: "이 매물 상담 문의",
     gT: "최근 거래",
     gH: "2025 — 2026",
     gallery: [
@@ -52,8 +48,7 @@ const T = {
     o3: "사무소",
     o4: "등록",
     o5: "공제",
-    h1enFallback: "Verified before listed.",
-    foot: "© 2026 24부동산 · Hero photo: Unsplash",
+    foot: "© 2026 24부동산 · Hero photo: Unsplash · Map: © OpenStreetMap contributors",
     capLoc: "SEOUL — GANGNAM",
   },
   en: {
@@ -68,13 +63,6 @@ const T = {
     heroCta: "Register your criteria →",
     mT: "Listings Map",
     mH: "Tap a pin for details",
-    legend: "SEOUL — Gangnam · Seocho · Seongsu · Yeonhui",
-    s1: "Net Area",
-    s2: "Floor / Type",
-    s3: "Facing",
-    s4: "Move-in",
-    s5: "4-document check passed",
-    s6: "Ask about this listing",
     gT: "Recent Closings",
     gH: "2025 — 2026",
     gallery: [
@@ -106,8 +94,7 @@ const T = {
     o3: "Office",
     o4: "License",
     o5: "Insured",
-    h1enFallback: "Verified before listed.",
-    foot: "© 2026 24 Estate · Hero photo: Unsplash",
+    foot: "© 2026 24 Estate · Hero photo: Unsplash · Map: © OpenStreetMap contributors",
     capLoc: "SEOUL — GANGNAM",
   },
 } as const;
@@ -197,13 +184,10 @@ export default function MainPage({
     return () => { io.disconnect(); rio.disconnect(); removeEventListener("scroll", onScroll); };
   }, []);
 
-  const openPanel = (id: string) => setOpenId(id);
-  const closePanel = () => setOpenId(null);
   const openFromTable = (id: string) => {
     mapRef.current?.scrollIntoView({ behavior: "smooth" });
     setTimeout(() => setOpenId(id), 650);
   };
-  const open = listings.find((L) => L.id === openId) || null;
 
   return (
     <>
@@ -249,59 +233,14 @@ export default function MainPage({
         </div>
       </section>
 
-      {/* INTERACTIVE MAP */}
+      {/* INTERACTIVE MAP (Leaflet) */}
       <section className="wrap map-sec" id="map" ref={mapRef}>
         <div className="slabel rv">
           <h2>{t.mT}</h2>
           <span className="hint">{t.mH}</span>
         </div>
-        <div
-          className="map-box rv"
-          onClick={(e) => {
-            const target = e.target as HTMLElement;
-            if (!target.closest(".m-panel") && !target.closest(".pin")) closePanel();
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/img/aerial-city.jpg" alt="" />
-          <div className="map-legend">{t.legend}</div>
-          {listings.map((L) => (
-            <div
-              key={L.id}
-              className={"pin" + (L.status === "done" ? " done" : "") + (openId === L.id ? " sel" : "")}
-              style={{ left: L.x + "%", top: L.y + "%" }}
-              onClick={(e) => { e.stopPropagation(); openPanel(L.id); }}
-            >
-              <span className="tip">{`${L.id} ${L.name} · ${L.price}`}</span>
-            </div>
-          ))}
-          <aside className={"m-panel" + (open ? " open" : "")}>
-            <div className="mp-img">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={open ? open.img : listings[0]?.img ?? "/images/luxury-pool.jpg"} alt="" />
-              <button className="mp-close" onClick={closePanel} aria-label="close">✕</button>
-            </div>
-            {open && (
-              <div className="mp-body">
-                <div className="mp-id">{open.id} — {open.district}</div>
-                <div className="mp-name">{open.name}</div>
-                <div>
-                  <span className="mp-price">{open.price}</span>
-                  <span className={"mp-status " + STATUS_LABEL[open.status].cls}>
-                    {STATUS_LABEL[open.status][lang]}
-                  </span>
-                </div>
-                <div className="mp-specs">
-                  <div><span>{t.s1}</span><b>{open.area}</b></div>
-                  <div><span>{t.s2}</span><b>{open.floor}</b></div>
-                  <div><span>{t.s3}</span><b>{open.dir}</b></div>
-                  <div><span>{t.s4}</span><b>{open.moveIn}</b></div>
-                </div>
-                <div className="mp-note">✓ <span>{t.s5}</span></div>
-                <a className="mp-cta" href="#contact">{t.s6}</a>
-              </div>
-            )}
-          </aside>
+        <div className="rv">
+          <ListingMap listings={listings} lang={lang} openId={openId} onOpen={setOpenId} />
         </div>
       </section>
 

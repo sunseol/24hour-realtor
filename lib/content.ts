@@ -16,6 +16,8 @@ export interface CMSListing {
   img: string;
   x: number;
   y: number;
+  lat: number;
+  lng: number;
 }
 
 export interface SiteContent {
@@ -51,6 +53,8 @@ export async function getListings(): Promise<CMSListing[]> {
       img: entry.image ?? "/images/luxury-pool.jpg",
       x: typeof entry.x === "number" ? entry.x : 50,
       y: typeof entry.y === "number" ? entry.y : 50,
+      lat: typeof entry.lat === "number" ? entry.lat : 37.55,
+      lng: typeof entry.lng === "number" ? entry.lng : 127.0,
     }))
     .sort((a, b) => a.id.localeCompare(b.id));
 }
