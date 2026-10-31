@@ -1,0 +1,14 @@
+id: SE-031
+name: 청담 트라팰리스
+district: 청담동
+trade: 전세
+price: 전세 25억
+area: 195.3㎡
+floor: 6층
+dir: 남서향
+moveIn: "2026.04"
+type: 아파트
+status: talk
+x: 56
+'y': 36
+image: /images/int-apartment.jpg
