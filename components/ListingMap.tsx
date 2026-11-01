@@ -53,12 +53,23 @@ export default function ListingMap({
       scrollWheelZoom: true,
       attributionControl: true,
     });
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors · Humanitarian OSM Team',
+      subdomains: "ab",
       maxZoom: 19,
     }).addTo(map);
-    map.setView([37.5663, 127.0376], 15); // 기준점: DDP
+    // DDP 랜드마크 마커
+    const ddpIcon = L.divIcon({
+      className: "ddp-marker",
+      iconSize: [17, 17],
+      iconAnchor: [8.5, 8.5],
+      html: '<span class="dot"></span>',
+    });
+    L.marker([37.56707, 127.0099], { icon: ddpIcon, zIndexOffset: -500 })
+      .addTo(map)
+      .bindTooltip("동대문디자인플라자 (DDP)", { direction: "top", offset: [0, -10], className: "estate-tip" });
+    map.setView([37.56707, 127.0099], 16); // 기준점: DDP
     map.on("click", () => onOpen(null));
     mapRef.current = map;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,9 +105,9 @@ export default function ListingMap({
       markersRef.current.push(m);
     });
     if (pts.length) {
-      map.fitBounds(L.latLngBounds(pts).pad(0.25), { maxZoom: 14 });
+      map.fitBounds(L.latLngBounds(pts).pad(0.25), { maxZoom: 16 });
     } else {
-      map.setView([37.5663, 127.0376], 15); // 매물 없으면 DDP 기준
+      map.setView([37.56707, 127.0099], 16); // 매물 없으면 DDP 기준
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listings, lang]);
