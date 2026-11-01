@@ -353,75 +353,50 @@ h1 {
   color: var(--ink);
   z-index: 1000;
 }
-/* ─── leaflet ── */
-.leaflet-host {
-  width: 100%;
-  height: 68vh;
-  min-height: 480px;
-  border-radius: 2px;
-  overflow: hidden;
-  position: relative;
+/* ─── maplibre ── */
+.map-host {
+  position: absolute;
+  inset: 0;
 }
-.leaflet-container {
-  font-family: var(--sans);
-  background: #e9e9e5;
+.maplibregl-map {
+  font: inherit;
 }
-.leaflet-tile-pane {
-  filter: saturate(0.85) brightness(1.01);
+.maplibregl-ctrl-attrib {
+  font-size: 9px !important;
+  background: rgba(251, 251, 250, 0.85) !important;
 }
-.estate-marker {
-  background: transparent;
-  border: none;
+.maplibregl-ctrl-attrib a {
+  color: var(--mid);
 }
-.estate-marker .dot {
-  display: block;
-  width: 15px;
-  height: 15px;
-  background: var(--ink);
-  border: 3px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-  transition: transform 0.25s;
+.maplibregl-ctrl-group {
+  border-radius: 2px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
-.estate-marker:hover .dot,
-.estate-marker.sel .dot {
-  transform: scale(1.4);
+.maplibregl-ctrl-group button {
+  width: 28px;
+  height: 28px;
 }
-.estate-marker.done .dot {
-  background: #9a9a94;
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--hair);
 }
-.ddp-marker .dot {
-  display: block;
-  width: 17px;
-  height: 17px;
-  background: #fff;
-  border: 4px solid var(--ink);
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+.maplibregl-popup {
+  z-index: 1100;
 }
-.leaflet-tooltip.estate-tip {
+.maplibregl-popup-content.estate-popup {
   background: var(--chip);
-  border: none;
   border-radius: 2px;
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.08em;
   color: var(--ink);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
-  padding: 5px 10px;
+  padding: 6px 10px;
 }
-.leaflet-tooltip.estate-tip::before {
+.maplibregl-popup-close-button {
   display: none;
 }
-.m-panel {
-  z-index: 1000;
-}
-.leaflet-control-zoom a {
-  color: var(--ink) !important;
-}
-.leaflet-control-attribution {
-  font-size: 9px !important;
-  background: rgba(251, 251, 250, 0.85) !important;
+.maplibregl-popup-tip {
+  display: none;
 }
 .m-panel {
   position: absolute;
@@ -1196,4 +1171,75 @@ tbody tr.in {
 .idx-empty {
   padding: 46px 0 50px;
   border-bottom: 1px solid var(--hair);
+}
+
+/* ─── 지도 마커 ── */
+.estate-marker {
+  background: transparent;
+  border: none;
+}
+.estate-marker .dot {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: var(--ink);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s;
+}
+.estate-marker:hover .dot,
+.estate-marker.sel .dot {
+  transform: scale(1.4);
+}
+.estate-marker.done .dot {
+  background: #9a9a94;
+}
+.ddp-marker .dot {
+  display: block;
+  width: 17px;
+  height: 17px;
+  background: #fff;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── maplibre 컨테이너/컨트롤 (CSS 정리 시 유실 복원) ── */
+.map-host {
+  position: absolute;
+  inset: 0;
+}
+.maplibregl-ctrl-attribution {
+  font-size: 9px !important;
+  background: rgba(251, 251, 250, 0.85) !important;
+}
+.maplibregl-ctrl-group {
+  border-radius: 2px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+.maplibregl-popup {
+  z-index: 1100;
+}
+.maplibregl-popup-content.estate-popup {
+  background: var(--chip);
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  padding: 6px 10px;
+}
+.maplibregl-popup-close-button {
+  display: none;
+}
+.maplibregl-popup-tip {
+  display: none;
+}
+
+/* maplibre-gl.css가 컨테이너에 position:relative를 강제하는 것을 덮어씀 (특이도 상향) */
+.map-box > .map-host {
+  position: absolute !important;
+  inset: 0;
 }

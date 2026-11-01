@@ -1,7 +1,7 @@
 "use client";
 
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import "maplibre-gl/dist/maplibre-gl.css";
+import * as maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
 import { STATUS_LABEL } from "@/lib/listings";
 import type { CMSListing } from "@/lib/content";
@@ -29,6 +29,12 @@ const T = {
   },
 } as const;
 
+// 기준점: DDP
+const DDP: [number, number] = [127.0099, 37.56707];
+
+// 라벨을 남길 도로 등급 — 큰 길만 (골목길·보행로 라벨은 제거)
+const KEEP_ROAD_CLASSES = ["motorway", "trunk", "primary", "secondary", "tertiary"];
+
 export default function ListingMap({
   listings,
   lang,
@@ -42,94 +48,135 @@ export default function ListingMap({
 }) {
   const t = T[lang];
   const divRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<L.Marker[]>([]);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const markersRef = useRef<{ id: string; el: HTMLElement; lnglat: [number, number] }[]>([]);
 
-  // 지도 초기화 (1회)
+  // 지도 초기화 (1회) + 스타일 수술: 골목길 라벨·POI 라벨 제거
   useEffect(() => {
     if (!divRef.current || mapRef.current) return;
-    const map = L.map(divRef.current, {
-      zoomControl: true,
-      scrollWheelZoom: true,
-      attributionControl: true,
+    const map = new maplibregl.Map({
+      container: divRef.current,
+      style: "https://tiles.openfreemap.org/styles/positron",
+      center: DDP,
+      zoom: 15.5,
+      attributionControl: { compact: false },
     });
-    L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors · Humanitarian OSM Team',
-      subdomains: "ab",
-      maxZoom: 19,
-    }).addTo(map);
-    // DDP 랜드마크 마커
-    const ddpIcon = L.divIcon({
-      className: "ddp-marker",
-      iconSize: [17, 17],
-      iconAnchor: [8.5, 8.5],
-      html: '<span class="dot"></span>',
-    });
-    L.marker([37.56707, 127.0099], { icon: ddpIcon, zIndexOffset: -500 })
-      .addTo(map)
-      .bindTooltip("동대문디자인플라자 (DDP)", { direction: "top", offset: [0, -10], className: "estate-tip" });
-    map.setView([37.56707, 127.0099], 16); // 기준점: DDP
-    map.on("click", () => onOpen(null));
     mapRef.current = map;
+    map.addControl(new maplibregl.AttributionControl({ compact: true }));
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
+
+    map.on("error", (e) => {
+      (window as unknown as Record<string, unknown>).__maplibreErr = String(e.error?.message || e.error || e);
+    });
+    (window as unknown as Record<string, unknown>).__ddpMap = map;
+    map.on("load", () => {
+      const style = map.getStyle();
+      for (const layer of style.layers) {
+        if (layer.type !== "symbol") continue;
+        const sl = (layer as { "source-layer"?: string })["source-layer"];
+        if (sl === "transportation_name") {
+          // 작은 길(minor/service/track/path/pedestrian) 이름은 표시하지 않음
+          const keepExpr = [
+            "match",
+            ["get", "class"],
+            KEEP_ROAD_CLASSES,
+            true,
+            false,
+          ] as unknown as maplibregl.FilterSpecification;
+          const old = (layer as { filter?: maplibregl.FilterSpecification }).filter;
+          map.setFilter(layer.id, (old ? (["all", old, keepExpr] as never) : keepExpr) as never);
+        }
+        if (sl === "poi") {
+          // 가게·병원 등 POI 라벨/아이콘 제거
+          map.removeLayer(layer.id);
+        }
+      }
+    });
+
+    // DDP 랜드마크 마커
+    const ddpEl = document.createElement("div");
+    ddpEl.className = "ddp-marker";
+    ddpEl.innerHTML = '<span class="dot"></span>';
+    const ddpPopup = new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 14,
+      className: "estate-popup",
+    }).setHTML("동대문디자인플라자 (DDP)");
+    const ddpMarker = new maplibregl.Marker({ element: ddpEl })
+      .setLngLat(DDP)
+      .addTo(map);
+    ddpEl.addEventListener("mouseenter", () => ddpPopup.addTo(map));
+    ddpEl.addEventListener("mouseleave", () => ddpPopup.remove());
+
+    // 배경 클릭 시 패널 닫기
+    map.on("click", () => onOpen(null));
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 매물 마커 (데이터/언어 변경 시 재구성)
+  // 마커 (매물/언어 변경 시 재구성)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    markersRef.current.forEach((m) => m.remove());
+    markersRef.current.forEach((m) => m.el.remove());
     markersRef.current = [];
     const pts: [number, number][] = [];
+
     listings.forEach((Li) => {
-      const ll: [number, number] = [Li.lat, Li.lng];
-      pts.push(ll);
-      const icon = L.divIcon({
-        className:
-          "estate-marker" + (Li.status === "done" ? " done" : "") + (openId === Li.id ? " sel" : ""),
-        iconSize: [15, 15],
-        iconAnchor: [7.5, 7.5],
-        html: '<span class="dot"></span>',
-      });
-      const m = L.marker(ll, { icon, riseOnHover: true }).addTo(map);
-      m.bindTooltip(`${Li.id} ${Li.name} · ${Li.price}`, {
-        direction: "top",
-        offset: [0, -10],
-        className: "estate-tip",
-      });
-      m.on("click", (e) => {
-        e.originalEvent.stopPropagation();
+      const lnglat: [number, number] = [Li.lng, Li.lat];
+      pts.push(lnglat);
+      const el = document.createElement("div");
+      el.className =
+        "estate-marker" + (Li.status === "done" ? " done" : "") + (openId === Li.id ? " sel" : "");
+      el.innerHTML = '<span class="dot"></span>';
+      const marker = new maplibregl.Marker({ element: el }).setLngLat(lnglat).addTo(map);
+      const popup = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: 12,
+        className: "estate-popup",
+      }).setHTML(`${Li.id} ${Li.name} · ${Li.price}`);
+      el.addEventListener("mouseenter", () => popup.addTo(map));
+      el.addEventListener("mouseleave", () => popup.remove());
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
         onOpen(Li.id);
       });
-      markersRef.current.push(m);
+      markersRef.current.push({ id: Li.id, el, lnglat });
     });
+
     if (pts.length) {
-      map.fitBounds(L.latLngBounds(pts).pad(0.25), { maxZoom: 16 });
+      const bounds = pts.reduce(
+        (b, c) => b.extend(c),
+        new maplibregl.LngLatBounds(pts[0], pts[0])
+      );
+      map.fitBounds(bounds, { padding: 90, maxZoom: 16, duration: 600 });
     } else {
-      map.setView([37.56707, 127.0099], 16); // 매물 없으면 DDP 기준
+      map.jumpTo({ center: DDP, zoom: 15.5 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listings, lang]);
 
-  // 선택 매물로 플라이
+  // 선택 매물 플라이 + 마커 강조
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !openId) return;
     const Li = listings.find((x) => x.id === openId);
     if (!Li) return;
-    map.flyTo([Li.lat, Li.lng], 14, { duration: 0.8 });
-    markersRef.current.forEach((m, i) => {
-      const el = m.getElement();
-      if (el) el.classList.toggle("sel", listings[i]?.id === openId);
-    });
+    map.flyTo({ center: [Li.lng, Li.lat], zoom: 16, duration: 800 });
+    markersRef.current.forEach((m) => m.el.classList.toggle("sel", m.id === openId));
   }, [openId, listings]);
 
   const open = listings.find((x) => x.id === openId) || null;
 
   return (
     <div className="map-box" id="mapBox">
-      <div ref={divRef} className="leaflet-host" />
+      <div ref={divRef} className="map-host" />
       <div className="map-legend">{t.legend}</div>
       <aside className={"m-panel" + (open ? " open" : "")}>
         <div className="mp-img">
