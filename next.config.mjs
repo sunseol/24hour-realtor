@@ -5,6 +5,7 @@ const nextConfig = {
   outputFileTracingIncludes: {
     "/": ["./content/**/*"],
     "/request": ["./content/**/*"],
+    "/listing/[id]/pdf": ["./content/**/*", "./public/images/**/*", "./public/fonts/**/*"],
   },
 };
 

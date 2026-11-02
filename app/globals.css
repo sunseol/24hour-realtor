@@ -521,6 +521,32 @@ h1 {
   letter-spacing: 0.08em;
   color: #2e6e4e;
 }
+.mp-pdf {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.mp-pdf-btn {
+  flex: 1;
+  text-align: center;
+  background: var(--ink);
+  color: #fbfbfa;
+  font-size: 12px;
+  padding: 11px 0;
+  border-radius: 2px;
+  transition: 0.25s;
+}
+.mp-pdf-btn:hover {
+  background: #000;
+}
+.mp-pdf-btn.ghost {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--hair);
+}
+.mp-pdf-btn.ghost:hover {
+  border-color: var(--ink);
+}
 .mp-cta {
   margin-top: 20px;
   display: block;

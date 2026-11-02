@@ -17,6 +17,8 @@ const T = {
     s4: "입주",
     s5: "4중 문서 검증 완료",
     s6: "이 매물 상담 문의",
+    pdfPreview: "PDF 미리보기",
+    pdfDl: "PDF 다운로드",
   },
   en: {
     legend: "SEOUL — Dongdaemun Design Plaza",
@@ -26,6 +28,8 @@ const T = {
     s4: "Move-in",
     s5: "4-document check passed",
     s6: "Ask about this listing",
+    pdfPreview: "Preview PDF",
+    pdfDl: "Download PDF",
   },
 } as const;
 
@@ -201,6 +205,19 @@ export default function ListingMap({
               <div><span>{t.s4}</span><b>{open.moveIn}</b></div>
             </div>
             <div className="mp-note">✓ <span>{t.s5}</span></div>
+            <div className="mp-pdf">
+              <a
+                className="mp-pdf-btn"
+                href={`/listing/${open.id}/pdf`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t.pdfPreview}
+              </a>
+              <a className="mp-pdf-btn ghost" href={`/listing/${open.id}/pdf?dl=1`}>
+                {t.pdfDl}
+              </a>
+            </div>
             <a className="mp-cta" href="#contact">{t.s6}</a>
           </div>
         )}
